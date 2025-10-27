@@ -17,3 +17,8 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+router.get('/hubs', (req, res) => {
+  res.status(200).send(); // resposta vazia, só pra rota existir
+});
+
