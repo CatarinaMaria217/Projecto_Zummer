@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 exports.getProjects = async (req, res) => {
   const { hub_id } = req.params;
 

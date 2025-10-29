@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 exports.getHubs = async (req, res) => {
   try {
     const tokenResponse = await fetch(process.env.FORGE_AUTH_URL, {
