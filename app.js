@@ -56,13 +56,7 @@ app.get('/external', async (req, res) => {
     res.json({ ok: true, data: posts, params: { userId, limit } });
 });
 
-// Global Error Middleware
-app.use((err, req, res, next) => {
-    res.status(500).json({
-        ok: false,
-        error: err.message || 'Internal server error',
-    });
-});
+
 
 
 module.exports = app;
