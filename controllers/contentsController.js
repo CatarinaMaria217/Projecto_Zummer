@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 
 exports.getProjectContents = async (req, res) => {
   const { project_id } = req.params;
