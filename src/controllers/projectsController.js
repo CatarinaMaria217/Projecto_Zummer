@@ -1,29 +1,28 @@
-exports.getProjects = async (req, res) => {
+// src/controllers/projectsController.js
+const { getToken } = require('../../utils/oauth');
+
+exports.getProjects = async (req, res, next) => {
   const { hub_id } = req.params;
 
   try {
-    const tokenResponse = await fetch(process.env.FORGE_AUTH_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        client_id: process.env.FORGE_CLIENT_ID,
-        client_secret: process.env.FORGE_CLIENT_SECRET,
-        grant_type: 'client_credentials',
-        scope: 'data:read'
-      })
-    });
+    // 1. Obtém o token 2-Legged
+    const tokenData = await getToken('data:read');
+    const access_token = tokenData.access_token;
 
-    const { access_token } = await tokenResponse.json();
-
+    // 2. Faz o pedido à API APS
     const projectsResponse = await fetch(
       `https://developer.api.autodesk.com/project/v1/hubs/${hub_id}/projects`,
       { headers: { Authorization: `Bearer ${access_token}` } }
     );
 
+    // 3. Verifica o estado da resposta
+    if (!projectsResponse.ok) {
+        throw new Error(`Erro da API ao buscar projetos: ${projectsResponse.statusText}`);
+    }
+
     const projects = await projectsResponse.json();
     res.json(projects);
   } catch (error) {
-    console.error('Erro ao buscar projetos:', error);
-    res.status(500).json({ error: 'Erro ao buscar projetos' });
+    next(error);
   }
 };

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APS Viewer - Exemplo FAPC</title>
+
+    <link rel="stylesheet" href="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/style.min.css" type="text/css">
+    <script src="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/viewer3D.min.js"></script>
+
+    <style>
+        /* Reset básico e tipografia */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Controlo e Dashboard (Lateral Esquerda) */
+        #dashboard {
+            width: 300px;
+            min-width: 280px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Título e Meta-Informação */
+        h1 {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        /* Status Box */
+        .status-box {
+            margin-bottom: 25px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        /* Área de Controlo de Modelo (Input e Botão) */
+        .model-controls {
+            margin-bottom: 25px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        #urnInput {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            padding: 10px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-right: 5px;
+        }
+
+        #loadModelButton {
+            width: 100%;
+            background-color: #007bff;
+        }
+
+        #loadModelButton:hover:not(:disabled) { background-color: #0056b3; }
+        #loadModelButton:disabled { background-color: #ccc; cursor: not-allowed; }
+
+        #loginButton { background-color: #28a745; }
+        #loginButton:hover { background-color: #1e7e34; }
+
+        #logoutButton { background-color: #dc3545; }
+        #logoutButton:hover { background-color: #c82333; }
+
+        /* Mensagem de Estado */
+        #userStatus {
+            font-size: 1em;
+            margin: 0;
+            font-weight: bold;
+        }
+        #statusMessage {
+            font-size: 0.9em;
+            margin-top: 5px;
+            padding: 0;
+        }
+
+        /* Viewer Container (Lado Direito) */
+        #viewerContainer {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="dashboard">
+        <h1>APS Viewer - Exemplo FAPC</h1>
+
+        <div class="status-box">
+            <h2>Status</h2>
+            <p id="userStatus">User: A carregar...</p>
+            <p id="statusMessage">A verificar autenticação...</p>
+
+            <div style="margin-top: 15px;">
+                <a href="/api/oauth/login"><button id="loginButton" style="display: none;">Login Autodesk</button></a>
+                <a href="/api/oauth/logout"><button id="logoutButton" style="display: none;">Logout</button></a>
+            </div>
+        </div>
+
+        <div class="model-controls">
+            <h2>Carregar Modelo (URN)</h2>
+            <input type="text" id="urnInput" placeholder="Insira o URN da Versão do Item" title="O URN deve começar com urn:adsk.wipprod:fs.file:vf.">
+            <button id="loadModelButton" disabled>Load Model</button>
+        </div>
+
+        <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid #eee;">
+            <p style="font-size: 0.8em; color: #777;">Projeto FAPC - ISCTE</p>
+        </div>
+    </div>
+
+    <div id="viewerContainer"></div>
+
+    <script src="../js/viewer.js"></script>
+</body>
+</html>

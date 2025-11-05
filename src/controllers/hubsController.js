@@ -1,26 +1,27 @@
-exports.getHubs = async (req, res) => {
+// src/controllers/hubsController.js
+// O caminho deve ser ajustado consoante a sua estrutura de pastas (assumindo utils/ está na raiz)
+const { getToken } = require('../../utils/oauth');
+
+exports.getHubs = async (req, res, next) => {
   try {
-    const tokenResponse = await fetch(process.env.FORGE_AUTH_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        client_id: process.env.FORGE_CLIENT_ID,
-        client_secret: process.env.FORGE_CLIENT_SECRET,
-        grant_type: 'client_credentials',
-        scope: 'data:read'
-      })
-    });
+    // 1. Obtém o token 2-Legged para acesso à API
+    const tokenData = await getToken('data:read');
+    const access_token = tokenData.access_token;
 
-    const { access_token } = await tokenResponse.json();
-
+    // 2. Faz o pedido à API APS
     const hubsResponse = await fetch('https://developer.api.autodesk.com/project/v1/hubs', {
       headers: { Authorization: `Bearer ${access_token}` }
     });
 
+    // 3. Verifica o estado da resposta
+    if (!hubsResponse.ok) {
+        throw new Error(`Erro da API ao buscar hubs: ${hubsResponse.statusText}`);
+    }
+
     const hubs = await hubsResponse.json();
     res.json(hubs);
   } catch (error) {
-    console.error('Erro ao buscar hubs:', error);
-    res.status(500).json({ error: 'Erro ao buscar hubs' });
+    // Envia o erro para o middleware global em app.js
+    next(error);
   }
 };
